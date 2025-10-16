@@ -61,7 +61,7 @@ segments:
         - [0x11d30, asm, ilb_stub]
         - [0x12220, .rodata, overlord]
         - [0x12350, .rodata, iso_cd]
-        - [0x12750, .rodata, deviso]
+        - [0x12820, .rodata, deviso]
         - [0x12850, .rodata, iso]
         - [0x12b00, .rodata, srpc]
         - [0x12c40, .rodata, vag]
@@ -75,7 +75,18 @@ segments:
         - [0x130b0, .rodata, spustreams]
         - [0x131a0, .rodata, pages]
         - [0x13300, .rodata, list]
-        - [0x133c0, data]
+        - [0x133c0, data, overlord]
+        - [0x133e0, data, iso_cd]
+        - [0x13460, data, ramdisk]
+        - [0x13470, data, dma]
+        - [0x13480, data, iso]
+        - [0x134b0, data, iso_queue]
+        - [0x13500, data, srpc]
+        - [0x135a0, data, sbank]
+        - [0x135c0, data, ssound]
+        - [0x13e30, data, minilzo]
+        - [0x13e40, .data, plugin]
+        - [0x13e50, data, streamlfo]
 
         # .sbss / .bss
         - { start: 0x14060, type: sbss, vram: 0x13fd0 }

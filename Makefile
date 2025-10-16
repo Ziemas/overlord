@@ -1,13 +1,13 @@
 TARGET := OVERLORD.IRX
 BUILDDIR := build
 # -gcoff for diff.py source support, actual module was -gstabs
-CFLAGS := -G 0 -O0 -Iinclude -quiet -g3 -gcoff -Wall
+CFLAGS := -G0 -O2 -quiet -Wall 
 LDFLAGS := -Tconfig/undefined_syms_auto.txt -Tconfig/undefined_funcs_auto.txt -T$(TARGET).ld -Map $(BUILDDIR)/$(TARGET).map
-ASFLAGS := -Iinclude -G0 -g3 -O1 -no-pad-sections
-MASPSXFLAGS := --aspsx-version=2.78
+ASFLAGS := -Iinclude -G0 -g3 -no-pad-sections
+#MASPSXFLAGS := --aspsx-version=2.78
 CPPFLAGS := -ffreestanding -Iinclude
 
-CC := wine tools/gcc-2.95.2/cc1.exe
+CC := tools/gcc-2.8.1/cc1
 CPP := cpp
 MASPSX := python tools/maspsx/maspsx.py
 AS := mipsel-none-elf-as
@@ -44,11 +44,11 @@ $(BUILDDIR)/$(TARGET).elf: $(OBJECTS)
 
 $(BUILDDIR)/%.c.o: %.c
 	@mkdir -p $(dir $@)
-	$(CPP) $(CPPFLAGS) $< | $(CC) $(CFLAGS) | $(MASPSX) $(MASPSXFLAGS) | $(AS) $(ASFLAGS) -o $@
+	$(CPP) $(CPPFLAGS) $< | $(CC) $(CFLAGS) | $(AS) $(ASFLAGS) -o $@
 
 $(BUILDDIR)/%.s.o: %.s
 	@mkdir -p $(dir $@)
-	$(MASPSX) $(MASPSXFLAGS) $< | $(AS) -o $@ $(ASFLAGS) 
+	$(AS) -o $@ $(ASFLAGS) $< 
 
 .PHONY: clean
 

@@ -1,0 +1,128 @@
+[
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/deviso.c.o -c /home/ziemas/Development/overlord/src/deviso.c",
+  "file": "/home/ziemas/Development/overlord/src/deviso.c",
+  "output": "CMakeFiles/test.dir/src/deviso.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/dma.c.o -c /home/ziemas/Development/overlord/src/dma.c",
+  "file": "/home/ziemas/Development/overlord/src/dma.c",
+  "output": "CMakeFiles/test.dir/src/dma.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/iso_api.c.o -c /home/ziemas/Development/overlord/src/iso_api.c",
+  "file": "/home/ziemas/Development/overlord/src/iso_api.c",
+  "output": "CMakeFiles/test.dir/src/iso_api.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/iso.c.o -c /home/ziemas/Development/overlord/src/iso.c",
+  "file": "/home/ziemas/Development/overlord/src/iso.c",
+  "output": "CMakeFiles/test.dir/src/iso.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/iso_cd.c.o -c /home/ziemas/Development/overlord/src/iso_cd.c",
+  "file": "/home/ziemas/Development/overlord/src/iso_cd.c",
+  "output": "CMakeFiles/test.dir/src/iso_cd.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/iso_queue.c.o -c /home/ziemas/Development/overlord/src/iso_queue.c",
+  "file": "/home/ziemas/Development/overlord/src/iso_queue.c",
+  "output": "CMakeFiles/test.dir/src/iso_queue.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/list.c.o -c /home/ziemas/Development/overlord/src/list.c",
+  "file": "/home/ziemas/Development/overlord/src/list.c",
+  "output": "CMakeFiles/test.dir/src/list.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/minilzo.c.o -c /home/ziemas/Development/overlord/src/minilzo.c",
+  "file": "/home/ziemas/Development/overlord/src/minilzo.c",
+  "output": "CMakeFiles/test.dir/src/minilzo.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/overlord.c.o -c /home/ziemas/Development/overlord/src/overlord.c",
+  "file": "/home/ziemas/Development/overlord/src/overlord.c",
+  "output": "CMakeFiles/test.dir/src/overlord.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/pages.c.o -c /home/ziemas/Development/overlord/src/pages.c",
+  "file": "/home/ziemas/Development/overlord/src/pages.c",
+  "output": "CMakeFiles/test.dir/src/pages.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/plugin.c.o -c /home/ziemas/Development/overlord/src/plugin.c",
+  "file": "/home/ziemas/Development/overlord/src/plugin.c",
+  "output": "CMakeFiles/test.dir/src/plugin.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/ramdisk.c.o -c /home/ziemas/Development/overlord/src/ramdisk.c",
+  "file": "/home/ziemas/Development/overlord/src/ramdisk.c",
+  "output": "CMakeFiles/test.dir/src/ramdisk.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/sbank.c.o -c /home/ziemas/Development/overlord/src/sbank.c",
+  "file": "/home/ziemas/Development/overlord/src/sbank.c",
+  "output": "CMakeFiles/test.dir/src/sbank.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/soundcommon.c.o -c /home/ziemas/Development/overlord/src/soundcommon.c",
+  "file": "/home/ziemas/Development/overlord/src/soundcommon.c",
+  "output": "CMakeFiles/test.dir/src/soundcommon.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/spustreams.c.o -c /home/ziemas/Development/overlord/src/spustreams.c",
+  "file": "/home/ziemas/Development/overlord/src/spustreams.c",
+  "output": "CMakeFiles/test.dir/src/spustreams.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/srpc.c.o -c /home/ziemas/Development/overlord/src/srpc.c",
+  "file": "/home/ziemas/Development/overlord/src/srpc.c",
+  "output": "CMakeFiles/test.dir/src/srpc.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/ssound.c.o -c /home/ziemas/Development/overlord/src/ssound.c",
+  "file": "/home/ziemas/Development/overlord/src/ssound.c",
+  "output": "CMakeFiles/test.dir/src/ssound.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/stream.c.o -c /home/ziemas/Development/overlord/src/stream.c",
+  "file": "/home/ziemas/Development/overlord/src/stream.c",
+  "output": "CMakeFiles/test.dir/src/stream.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/streamlfo.c.o -c /home/ziemas/Development/overlord/src/streamlfo.c",
+  "file": "/home/ziemas/Development/overlord/src/streamlfo.c",
+  "output": "CMakeFiles/test.dir/src/streamlfo.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/streamlist.c.o -c /home/ziemas/Development/overlord/src/streamlist.c",
+  "file": "/home/ziemas/Development/overlord/src/streamlist.c",
+  "output": "CMakeFiles/test.dir/src/streamlist.c.o"
+},
+{
+  "directory": "/home/ziemas/Development/overlord/build",
+  "command": "/usr/bin/cc  -I/home/ziemas/Development/overlord/include -m32 -o CMakeFiles/test.dir/src/vag.c.o -c /home/ziemas/Development/overlord/src/vag.c",
+  "file": "/home/ziemas/Development/overlord/src/vag.c",
+  "output": "CMakeFiles/test.dir/src/vag.c.o"
+}
+]
