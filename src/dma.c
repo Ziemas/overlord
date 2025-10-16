@@ -1,5 +1,8 @@
 #include "common.h"
 
+int EeDmaSema = 0;
+int SpuDmaStatus = 0;
+
 INCLUDE_ASM("asm/nonmatchings/dma", SpuDmaIntr);
 
 INCLUDE_ASM("asm/nonmatchings/dma", DMA_SendToEE);

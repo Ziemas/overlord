@@ -61,7 +61,6 @@ gGunBank = 0x21850;
 gBoardBank = 0x22050;
 gLevelBanks = 0x22850;
 gSounds = 0x24050;
-D_00024064 = 0x24064;
 gEarTrans = 0x25250;
 D_00025254 = 0x25254;
 D_0002525C = 0x2525C;

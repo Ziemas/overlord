@@ -1,5 +1,17 @@
 #include "common.h"
 
+int iso_mbx = -1;
+int iso_thread = -1;
+int dgo_mbx = -1;
+int dgo_thread = -1;
+int str_thread = -1;
+int play_thread = -1;
+int sync_mbx = -1;
+
+struct fs_api *isofs = NULL;
+int ext_pause = 0;
+int ext_resume = 0;
+
 INCLUDE_RODATA("asm/nonmatchings/iso", D_000127C0);
 
 INCLUDE_ASM("asm/nonmatchings/iso", InitISOFS);

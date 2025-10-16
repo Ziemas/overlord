@@ -1,7 +1,27 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: thread.h,v 1.14 2002/02/17 19:25:34 tei Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         thread.h
+ *                         thread manager defines
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12      tei
+ *       1.01           1999/11/20      tei
+ */
+
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
-#include "types.h"
+#include <sys/types.h>
 
 #if defined(_LANGUAGE_C_PLUS_PLUS)||defined(__cplusplus)||defined(c_plusplus)
 extern "C" {
@@ -40,26 +60,26 @@ struct SysClock {
 
 /* For Thread Management */
 struct ThreadParam {
-    u_int	attr;		/* Â°ï¿½ï¿½ 			*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    void	*entry;		/* ï¿½ï¿½ï¿½ï¿½È¥ê¥¢ï¿½É¥ì¥¹ 		*/
-    int		stackSize;	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    int		initPriority;	/* Í¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
+    u_int	attr;		/* Â°À­ 			*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    void	*entry;		/* ¥¨¥ó¥È¥ê¥¢¥É¥ì¥¹ 		*/
+    int		stackSize;	/* ¥¹¥¿¥Ã¥¯¥µ¥¤¥º 		*/
+    int		initPriority;	/* Í¥Àè½ç°Ì ½é´üÃÍ 		*/
 };
 
 struct ThreadInfo {
-    u_int	attr;		/* Â°ï¿½ï¿½ 			*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    int		status;		/* ï¿½ï¿½ï¿½ï¿½Ã¥É¤Î¾ï¿½ï¿½ï¿½ 		*/
-    void	*entry;		/* ï¿½ï¿½ï¿½ï¿½È¥ê¥¢ï¿½É¥ì¥¹ 		*/
-    void	*stack;		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½Î°ï¿½ï¿½ï¿½ï¿½Æ¬ 		*/
-    int		stackSize;	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    void	*gpReg;		/* gp ï¿½ì¥¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    int		initPriority;	/* Í¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    int		currentPriority;/* Í¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    int		waitType;	/* ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ö¤Î¼ï¿½ï¿½ï¿½		*/
-    int		waitId;		/* waittype ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Ð¾Ý¤ï¿½ ID	*/
-    int		wakeupCount;	/* Ì¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ wakeup ï¿½ï¿½ï¿½		*/
+    u_int	attr;		/* Â°À­ 			*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    int		status;		/* ¥¹¥ì¥Ã¥É¤Î¾õÂÖ 		*/
+    void	*entry;		/* ¥¨¥ó¥È¥ê¥¢¥É¥ì¥¹ 		*/
+    void	*stack;		/* ¥¹¥¿¥Ã¥¯ÎÎ°è¤ÎÀèÆ¬ 		*/
+    int		stackSize;	/* ¥¹¥¿¥Ã¥¯¥µ¥¤¥º 		*/
+    void	*gpReg;		/* gp ¥ì¥¸¥¹¥¿ÃÍ 		*/
+    int		initPriority;	/* Í¥Àè½ç°Ì ½é´üÃÍ 		*/
+    int		currentPriority;/* Í¥Àè½ç°Ì ¸½ºßÃÍ 		*/
+    int		waitType;	/* ÂÔ¤Á¾õÂÖ¤Î¼ïÎà		*/
+    int		waitId;		/* waittype ¤ÎÂÔ¤ÁÂÐ¾Ý¤Î ID	*/
+    int		wakeupCount;	/* Ì¤½èÍý¤Î wakeup ²ó¿ô		*/
     u_long	*regContext;
     int		reserved1;
     int		reserved2;
@@ -68,16 +88,16 @@ struct ThreadInfo {
 };
 
 typedef struct ThreadRunStatus {
-    int		status;		/* ï¿½ï¿½ï¿½ï¿½Ã¥É¤Î¾ï¿½ï¿½ï¿½ 		*/
-    int		currentPriority;/* Í¥ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 		*/
-    int		waitType;	/* ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½Ö¤Î¼ï¿½ï¿½ï¿½		*/
-    int		waitId;		/* waittype ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Ð¾Ý¤ï¿½ ID	*/
-    int		wakeupCount;	/* Ì¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ wakeup ï¿½ï¿½ï¿½		*/
+    int		status;		/* ¥¹¥ì¥Ã¥É¤Î¾õÂÖ 		*/
+    int		currentPriority;/* Í¥Àè½ç°Ì ¸½ºßÃÍ 		*/
+    int		waitType;	/* ÂÔ¤Á¾õÂÖ¤Î¼ïÎà		*/
+    int		waitId;		/* waittype ¤ÎÂÔ¤ÁÂÐ¾Ý¤Î ID	*/
+    int		wakeupCount;	/* Ì¤½èÍý¤Î wakeup ²ó¿ô		*/
     u_long	*regContext;
-    struct SysClock runClocks;		/* ï¿½Â¹Ô»ï¿½ï¿½ï¿½                     */
-    u_int	intrPreemptCount;	/* ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½ï¿½ï¿½Ç¼Â¹Ô¸ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½ì¤¿ï¿½ï¿½ï¿½ */
-    u_int	threadPreemptCount;	/* ï¿½Â¹Ô¸ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½ì¤¿ï¿½ï¿½ï¿½         */
-    u_int	releaseCount;		/* ï¿½Â¹Ô¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½         */
+    struct SysClock runClocks;		/* ¼Â¹Ô»þ´Ö                     */
+    u_int	intrPreemptCount;	/* ³ä¹þ¤ß½èÍý¤Ç¼Â¹Ô¸¢¤òÃ¥¤ï¤ì¤¿²ó¿ô */
+    u_int	threadPreemptCount;	/* ¼Â¹Ô¸¢¤òÃ¥¤ï¤ì¤¿²ó¿ô         */
+    u_int	releaseCount;		/* ¼Â¹Ô¸¢¤ò¼êÊü¤·¤¿²ó¿ô         */
 } ThreadRunStatus;
 
 /* ThreadInfo.status */
@@ -90,13 +110,13 @@ typedef struct ThreadRunStatus {
 #define THS_DEAD	0x20
 
 /* ThreadInfo.waitType */
-#define TSW_SLEEP	1	/* SleepThread()ï¿½Ë¤ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-#define TSW_DELAY	2	/* DelayThread()ï¿½Ë¤ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-#define TSW_SEMA	3	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½			*/
-#define TSW_EVENTFLAG	4	/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-#define TSW_MBX		5	/* ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¥Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-#define TSW_VPL		6	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-#define TSW_FPL		7	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½	*/
+#define TSW_SLEEP	1	/* SleepThread()¤Ë¤è¤ëÂÔ¤Á¾õÂÖ		*/
+#define TSW_DELAY	2	/* DelayThread()¤Ë¤è¤ëÂÔ¤Á¾õÂÖ		*/
+#define TSW_SEMA	3	/* ¥»¥Þ¥Õ¥©¤ÎÂÔ¤Á¾õÂÖ			*/
+#define TSW_EVENTFLAG	4	/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤ÎÂÔ¤Á¾õÂÖ		*/
+#define TSW_MBX		5	/* ¥á¥Ã¥»¡¼¥¸¥Ü¥Ã¥¯¥¹¤ÎÂÔ¤Á¾õÂÖ		*/
+#define TSW_VPL		6	/* ²ÄÊÑÄ¹¥á¥â¥ê¥Ö¥í¥Ã¥¯³ÍÆÀ¤ÎÂÔ¤Á¾õÂÖ	*/
+#define TSW_FPL		7	/* ¸ÇÄêÄ¹¥á¥â¥ê¥Ö¥í¥Ã¥¯³ÍÆÀ¤ÎÂÔ¤Á¾õÂÖ	*/
 
 /* ThreadParam.attr, ThreadInfo.attr */
 #define TH_ASM		0x01000000
@@ -131,7 +151,7 @@ extern int ReferThreadStatus( int thid, struct ThreadInfo *info );
 extern int iReferThreadStatus( int thid, struct ThreadInfo *info );
 extern int ReferThreadRunStatus( int thid, struct ThreadRunStatus *stat,
 				 size_t statsize );
-/* ------ Æ±ï¿½ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½ï¿½ï¿½Ç½ ------ */
+/* ------ Æ±´ü¡¦ÄÌ¿®µ¡Ç½ ------ */
 
 /* XXXX->attr common */
 #define AT_THFIFO	0
@@ -156,19 +176,19 @@ extern int iCancelWakeupThread( int thid );
 
 /* --- Semaphore --- */
 struct SemaParam {
-    u_int	attr;		/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    int		initCount;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Î½ï¿½ï¿½ï¿½ï¿½		*/
-    int		maxCount;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Îºï¿½ï¿½ï¿½ï¿½ï¿½		*/
+    u_int	attr;		/* ¥»¥Þ¥Õ¥©¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    int		initCount;	/* ¥»¥Þ¥Õ¥©¤Î½é´üÃÍ		*/
+    int		maxCount;	/* ¥»¥Þ¥Õ¥©¤ÎºÇÂçÃÍ		*/
 };
 
 struct SemaInfo {
-    u_int	attr;		/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    int		initCount;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Î½ï¿½ï¿½ï¿½ï¿½		*/
-    int		maxCount;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Îºï¿½ï¿½ï¿½ï¿½ï¿½		*/
-    int		currentCount;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Î¸ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-    int		numWaitThreads;	/* ï¿½ï¿½ï¿½Þ¥Õ¥ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥É¿ï¿½	*/
+    u_int	attr;		/* ¥»¥Þ¥Õ¥©¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    int		initCount;	/* ¥»¥Þ¥Õ¥©¤Î½é´üÃÍ		*/
+    int		maxCount;	/* ¥»¥Þ¥Õ¥©¤ÎºÇÂçÃÍ		*/
+    int		currentCount;	/* ¥»¥Þ¥Õ¥©¤Î¸½ºßÃÍ		*/
+    int		numWaitThreads;	/* ¥»¥Þ¥Õ¥©ÂÔ¤Á¥¹¥ì¥Ã¥É¿ô	*/
     int		reserved1;
     int		reserved2;
 };
@@ -189,17 +209,17 @@ extern int iReferSemaStatus( int semid, struct SemaInfo *info );
 
 /* --- EventFlag --- */
 struct EventFlagParam {
-    u_int	attr;		/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    u_int	initPattern;	/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½Î½ï¿½ï¿½ï¿½ï¿½	*/
+    u_int	attr;		/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    u_int	initPattern;	/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤Î½é´üÃÍ	*/
 };
 
 struct EventFlagInfo {
-    u_int	attr;		/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    u_int	initPattern;	/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½Î½ï¿½ï¿½ï¿½ï¿½	*/
-    u_int	currentPattern;	/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½Î¸ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-    int		numWaitThreads;	/* ï¿½ï¿½ï¿½Ù¥ï¿½È¥Õ¥é¥°ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥É¿ï¿½ */
+    u_int	attr;		/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    u_int	initPattern;	/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤Î½é´üÃÍ	*/
+    u_int	currentPattern;	/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°¤Î¸½ºßÃÍ	*/
+    int		numWaitThreads;	/* ¥¤¥Ù¥ó¥È¥Õ¥é¥°ÂÔ¤Á¥¹¥ì¥Ã¥É¿ô */
     int		reserved1;
     int		reserved2;
 };
@@ -228,16 +248,16 @@ extern int iReferEventFlagStatus( int evfid, struct EventFlagInfo *info );
 
 /* --- MessageBox --- */
 struct MbxParam {
-    u_int	attr;		/* ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¥Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½	*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
+    u_int	attr;		/* ¥á¥Ã¥»¡¼¥¸¥Ü¥Ã¥¯¥¹¤ÎÂ°À­	*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
 };
 
 struct MbxInfo {
-    u_int	attr;		/* ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü¥Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½	*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  		*/
-    int		numWaitThreads;	/* ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥É¿ï¿½	*/
-    int		numMessage;	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-    struct MsgPacket	*topPacket; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½	*/
+    u_int	attr;		/* ¥á¥Ã¥»¡¼¥¸¥Ü¥Ã¥¯¥¹¤ÎÂ°À­	*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  		*/
+    int		numWaitThreads;	/* ¥á¥Ã¥»¡¼¥¸ÂÔ¤Á¥¹¥ì¥Ã¥É¿ô	*/
+    int		numMessage;	/* ¼õ¼è¤êÂÔ¤Á¥á¥Ã¥»¡¼¥¸¿ô	*/
+    struct MsgPacket	*topPacket; /* ¼õ¼è¤êÂÔ¤ÁÀèÆ¬¥á¥Ã¥»¡¼¥¸	*/
     int		reserved1;
     int		reserved2;
 };
@@ -265,17 +285,17 @@ extern int iReferMbxStatus( int mbxid, struct MbxInfo *info );
 
 /* --- Variable zize memory pool --- */
 struct VplParam {
-    u_int	attr;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½			*/
-    int		size;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥ï¿½ï¿½ï¿½ï¿½ï¿½		*/
+    u_int	attr;		/* ²ÄÊÑÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó			*/
+    int		size;		/* ²ÄÊÑÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥µ¥¤¥º		*/
 };
 
 struct VplInfo {
-    u_int	attr;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  			*/
-    int		size;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥ï¿½ï¿½ï¿½ï¿½ï¿½		*/
-    int		freeSize;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Ì¤ï¿½ï¿½ï¿½Ñ¥ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-    int		numWaitThreads;	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥É¿ï¿½			*/
+    u_int	attr;		/* ²ÄÊÑÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  			*/
+    int		size;		/* ²ÄÊÑÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥µ¥¤¥º		*/
+    int		freeSize;	/* ²ÄÊÑÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÌ¤»ÈÍÑ¥µ¥¤¥º	*/
+    int		numWaitThreads;	/* ¥á¥â¥êÂÔ¤Á¥¹¥ì¥Ã¥É¿ô			*/
     int		reserved1;
     int		reserved2;
     int		reserved3;
@@ -297,19 +317,19 @@ extern int  iReferVplStatus( int vplid, struct VplInfo *info );
 
 /* --- Fixed zize memory pool --- */
 struct FplParam {
-    u_int	attr;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  			*/
-    int		blockSize;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-    int		numBlocks;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½	*/
+    u_int	attr;		/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  			*/
+    int		blockSize;	/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥Ö¥í¥Ã¥¯¥µ¥¤¥º	*/
+    int		numBlocks;	/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥Ö¥í¥Ã¥¯¿ô	*/
 };
 
 struct FplInfo {
-    u_int	attr;		/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Â°ï¿½ï¿½		*/
-    u_int	option;		/* ï¿½æ¡¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ²Ã¾ï¿½ï¿½ï¿½  			*/
-    int		blockSize;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	*/
-    int		numBlocks;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½Î¥Ö¥ï¿½ï¿½Ã¥ï¿½ï¿½ï¿½	*/
-    int		freeBlocks;	/* ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½×¡ï¿½ï¿½ï¿½ï¿½Ì¤ï¿½ï¿½ï¿½Ñ¥Ö¥ï¿½ï¿½Ã¥ï¿½	*/
-    int		numWaitThreads;	/* ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½Ã¥É¿ï¿½			*/
+    u_int	attr;		/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÂ°À­		*/
+    u_int	option;		/* ¥æ¡¼¥¶ÍÑÉÕ²Ã¾ðÊó  			*/
+    int		blockSize;	/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥Ö¥í¥Ã¥¯¥µ¥¤¥º	*/
+    int		numBlocks;	/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤Î¥Ö¥í¥Ã¥¯¿ô	*/
+    int		freeBlocks;	/* ¸ÇÄêÄ¹¥á¥â¥ê¥×¡¼¥ë¤ÎÌ¤»ÈÍÑ¥Ö¥í¥Ã¥¯	*/
+    int		numWaitThreads;	/* ¥á¥â¥êÂÔ¤Á¥¹¥ì¥Ã¥É¿ô			*/
     int		reserved1;
     int		reserved2;
     int		reserved3;
@@ -330,7 +350,7 @@ extern int FreeFpl( int fplid, void *block );
 extern int ReferFplStatus( int fplid, struct FplInfo *info );
 extern int iReferFplStatus( int fplid, struct FplInfo *info );
 
-/* ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½Þ´ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ */
+/* »þ´Ö/¥¿¥¤¥Þ´ÉÍýµ¡Ç½ */
 extern int DelayThread(unsigned int usec);
 
 typedef u_int (*AlarmHandler)(void*);
@@ -348,7 +368,7 @@ extern int iCancelAlarm( AlarmHandler handler, void *common );
 extern void USec2SysClock(unsigned int usec, struct SysClock *clock);
 extern void SysClock2USec(struct SysClock *clock, int *sec, int *usec);
 
-/* ï¿½ï¿½ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½ï¿½Ö¤Î¼ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ */
+/* ¥·¥¹¥Æ¥à¾õÂÖ¤Î¼èÆÀµ¡Ç½ */
 
 typedef struct SystemStatus {
     u_int		status;

@@ -1,3 +1,22 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: sysmem.h,v 1.6 2003/04/15 11:13:19 tei Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         sysmem.h
+ *                         system memory manager
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12      tei
+ */
+
 #ifndef _SYSMEM_H
 #define _SYSMEM_H
 

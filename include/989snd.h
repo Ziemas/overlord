@@ -11,6 +11,8 @@ typedef long int SInt64;
 typedef long unsigned int UInt64;
 typedef int BOOL;
 
+typedef SInt32 SoundBankPtr;
+
 typedef SInt32 (*Extern989Proc)(SInt32 arg1, SInt32 arg2, SInt32 arg3, SInt32 arg4, SInt32 arg5);
 
 typedef struct { // 0x14
@@ -21,8 +23,11 @@ typedef struct { // 0x14
     /* 0x10 */ Extern989Proc procs[1];
 } Extern989Handler;
 
-typedef Extern989Handler* Extern989HandlerPtr;
+typedef Extern989Handler *Extern989HandlerPtr;
 
 BOOL snd_RegisterExternProcHandler(Extern989HandlerPtr hand);
+void snd_UnloadBank(SoundBankPtr bank);
+void snd_ResolveBankXREFS();
+void snd_SetPlaybackMode(SInt32 mode);
 
 #endif // _989SND_H_

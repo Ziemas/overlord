@@ -1,4 +1,24 @@
-#include "types.h"
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: stdio.h,v 1.12 2001/12/01 08:31:53 tei Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         stdio.h
+ *                         like ansi stdio
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12      tei
+ *       1.10           2000/10/21      tei
+ */
+
+#include <sys/types.h>
 
 #ifndef	_STDIO_H
 #define	_STDIO_H

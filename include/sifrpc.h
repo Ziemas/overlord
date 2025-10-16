@@ -1,3 +1,22 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: sifrpc.h,v 1.4 1999/11/21 10:36:11 hakama Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         sifrpc.h
+ *                         sif remote proc basic header.
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12
+ */
+
 #ifndef _SIFRPC_H_DEFS
 #define _SIFRPC_H_DEFS
 

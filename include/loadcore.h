@@ -1,3 +1,23 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: loadcore.h,v 1.18 2003/06/03 08:48:04 tei Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         loadcore.h
+ *                         Module manager
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12      tei
+ *       1.01           2000/12/08      tei 	    add ReleaseLibraryEntries()
+ */
+
 #ifndef _LOADCORE_H
 #define _LOADCORE_H
 

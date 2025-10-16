@@ -1,3 +1,22 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: sifcmd.h,v 1.7 1999/11/21 10:36:11 hakama Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-1999 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         sifcmd.h
+ *                         sif command packet routine header.
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12
+ */
+
 #ifndef _SIFCMD_H_DEFS
 #define _SIFCMD_H_DEFS
 

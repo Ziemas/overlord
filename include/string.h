@@ -1,10 +1,31 @@
+/* SCE CONFIDENTIAL
+ "PlayStation 2" Programmer Tool Runtime Library Release 3.0
+ */
+/* $Id: string.h,v 1.7 2003/04/15 11:10:41 tei Exp $ */
+
+/*
+ *                     I/O Processor System Services
+ *
+ *      Copyright (C) 1998-2003 Sony Computer Entertainment Inc.
+ *                        All Rights Reserved.
+ *
+ *                         string.h
+ *                         string functions pseudo definition header 
+ *
+ *       Version        Date            Design      Log
+ *  --------------------------------------------------------------------
+ *       1.00           1999/10/12      tei
+ *       1.01           2000/10/02      tei         ANSI compatible
+ *       1.02           2003/04/15      tei         add strtok_r()
+ */
+
 #ifndef	_STRING_H
 #define	_STRING_H
 
 #ifndef _TYPES_H
-#include "types.h"
+#include <sys/types.h>
 #endif
-#include "memory.h"
+#include <memory.h>
 
 #if defined(_LANGUAGE_C_PLUS_PLUS)||defined(__cplusplus)||defined(c_plusplus)
 extern "C" {
