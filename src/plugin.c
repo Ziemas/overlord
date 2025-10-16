@@ -46,9 +46,9 @@ void Init989Plugins() {
 
 INCLUDE_ASM("asm/nonmatchings/plugin", QueueVagStream989);
 
-INCLUDE_ASM("asm/nonmatchings/plugin", NullPlugin989);
+SInt32 NullPlugin989(SInt32 arg1, SInt32 arg2, SInt32 arg3, SInt32 arg4, SInt32 arg5) { return 0; }
 
-INCLUDE_ASM("asm/nonmatchings/plugin", PlayQueuedVagStream989);
+SInt32 PlayQueuedVagStream989(SInt32 arg1, SInt32 arg2, SInt32 arg3, SInt32 arg4, SInt32 arg5) { return 0; }
 
 INCLUDE_ASM("asm/nonmatchings/plugin", StopVagStream989);
 

@@ -75,7 +75,7 @@ segments:
         - [0x130b0, .rodata, spustreams]
         - [0x131a0, .rodata, pages]
         - [0x13300, .rodata, list]
-        - [0x133c0, data, overlord]
+        - [0x133c0, .data, overlord]
         - [0x133e0, data, iso_cd]
         - [0x13460, data, ramdisk]
         - [0x13470, data, dma]

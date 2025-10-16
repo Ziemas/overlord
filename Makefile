@@ -1,7 +1,7 @@
 TARGET := OVERLORD.IRX
 BUILDDIR := build
 # -gcoff for diff.py source support, actual module was -gstabs
-CFLAGS := -G0 -O2 -quiet -Wall 
+CFLAGS := -G0 -O2 -g3 -quiet -Wall 
 LDFLAGS := -Tconfig/undefined_syms_auto.txt -Tconfig/undefined_funcs_auto.txt -T$(TARGET).ld -Map $(BUILDDIR)/$(TARGET).map
 ASFLAGS := -Iinclude -G0 -g3 -no-pad-sections
 #MASPSXFLAGS := --aspsx-version=2.78
