@@ -1,0 +1,90 @@
+name: overlord
+sha1: df3abcd68fa5ecb42e6f9dad18fb473f0cbfc09f
+options:
+    # paths
+    basename: OVERLORD.IRX
+    target_path: in/OVERLORD.IRX
+    base_path: ..
+    
+    asm_path: asm
+    src_path: src
+    build_path: build
+    subalign: 4
+
+    extensions_path: tools/splat_ext 
+    symbol_addrs_path: config/symbol_addrs.txt
+    undefined_funcs_auto_path: config/undefined_funcs_auto.txt
+    undefined_syms_auto_path:  config/undefined_syms_auto.txt
+
+    migrate_rodata_to_functions: True
+    named_regs_for_c_funcs: True
+    
+    # compiler 
+    compiler: GCC
+    platform: psx
+
+    string_encoding: ASCII
+    
+    section_order: [".iopmod", ".text", ".rel.text", ".rodata", ".rel.rodata", ".data", ".rel.data", ".sbss", ".bss"]
+
+segments:
+    - [0, databin, elf_header]
+    - [0x74, databin, iopmod]
+    - name: text
+      type: code
+      start: 0x90
+      vram: 0x0
+      bss_size: 0x7df8c
+      subsegments:
+        # .text
+        - [0x90, c, overlord]
+        - [0x350, c, iso_cd]
+        - [0x35c0, c, ramdisk]
+        - [0x36e0, c, deviso]
+        - [0x3b00, c, dma]
+        - [0x42b0, c, iso]
+        - [0x6290, c, iso_queue]
+        - [0x7720, c, stream]
+        - [0x7e10, c, srpc]
+        - [0x9320, c, vag]
+        - [0xb270, c, sbank]
+        - [0xb5a0, c, ssound]
+        - [0xcb20, c, soundcommon]
+        - [0xcc00, c, iso_api]
+        - [0xd4f0, c, minilzo]
+        - [0xd8f0, c, plugin]
+        - [0xdf60, c, streamlfo]
+        - [0xecb0, c, streamlist]
+        - [0xfa00, c, spustreams]
+        - [0x115f0, c, pages]
+        - [0x11b00, c, list]
+        - [0x11d30, asm, ilb_stub]
+        - [0x12220, .rodata, overlord]
+        - [0x12350, .rodata, iso_cd]
+        - [0x12750, .rodata, deviso]
+        - [0x12850, .rodata, iso]
+        - [0x12b00, .rodata, srpc]
+        - [0x12c40, .rodata, vag]
+        - [0x12d10, .rodata, sbank]
+        - [0x12d50, .rodata, ssound]
+        - [0x12f50, .rodata, iso_api]
+        - [0x12f60, .rodata, minilzo]
+        - [0x12f70, .rodata, plugin]
+        - [0x13000, .rodata, streamlfo]
+        - [0x13010, .rodata, streamlist]
+        - [0x130b0, .rodata, spustreams]
+        - [0x131a0, .rodata, pages]
+        - [0x13300, .rodata, list]
+        - [0x133c0, data]
+
+        # .sbss / .bss
+        - { start: 0x14060, type: sbss, vram: 0x13fd0 }
+        - { start: 0x14060, type: bss, vram: 0x14020 }
+
+    - [0x014060, databin] # .mdebug
+    - [0x01d624, databin] # .shstrtab
+    - [0x01d8c0, databin] # .rel.text
+    - [0x0257a0, databin] # .rel.rodata
+    - [0x025de8, databin] # .rel.data
+    - [0x025f18, databin] # .symtab
+    - [0x0281d8, databin] # .strtab
