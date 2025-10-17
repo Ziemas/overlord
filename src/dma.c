@@ -158,9 +158,6 @@ void DMA_SendToEE(u8 *iop_mem, u32 size, u32 ee_addr) {
     }
 }
 
-#ifdef NON_MATCHING
-INCLUDE_ASM("asm/nonmatchings/dma", DMA_SendToSPUAndSync);
-#else
 bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct VagCmd *cmd, int disable_intr) {
     struct VagCmd *sibling;
     int transferred;
@@ -207,13 +204,13 @@ bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct V
         CpuResumeIntr(oldintr);
     }
 
-    if (transferred < ((size_one_side + 63) & ~63)) {
+    size_one_side = ((size_one_side + 63) & ~63);
+    if (transferred < size_one_side) {
         return false;
     }
 
     return true;
 }
-#endif
 
 void DmaCanccelThisVagCmd(struct VagCmd *cmd) {
     int channel;
