@@ -4,6 +4,7 @@
 #include "overlord.h"
 #include "sysmem.h"
 #include <stdio.h>
+#include <string.h>
 
 struct Page *AllocPages(struct PageList *page_list, u32 num_pages);
 
@@ -64,11 +65,11 @@ struct Page *AllocPagesBytes(struct PageList *page_list, s32 size_bytes) {
 
 INCLUDE_ASM("asm/nonmatchings/pages", AllocPages);
 
-#ifndef NON_MATCHING
+#ifdef NON_MATCHING
 INCLUDE_ASM("asm/nonmatchings/pages", FreePagesList);
 #else
 struct Page *FreePagesList(struct PageList *page_list, struct Page *pages) {
-    struct Page *next, *p;
+    struct Page *next;
 
     if (!pages) {
         return NULL;
@@ -82,7 +83,7 @@ struct Page *FreePagesList(struct PageList *page_list, struct Page *pages) {
             ;
     }
 
-    do {
+    while (1) {
         next = pages->next;
         pages->prev = NULL;
         pages->next = NULL;
@@ -90,7 +91,10 @@ struct Page *FreePagesList(struct PageList *page_list, struct Page *pages) {
         pages->state = PAGE_FREE;
         page_list->free_pages = page_list->free_pages + 1;
         pages = next;
-    } while (next);
+        if (!pages) {
+            break;
+        }
+    }
 
     return NULL;
 }
@@ -125,10 +129,24 @@ struct Page *StepTopPage(struct PageList *list, struct Page *top_page) {
 
 #ifdef NON_MATCHING
 INCLUDE_ASM("asm/nonmatchings/pages", FromPagesCopy);
-
 #else
-void FromPagesCopy(struct Page *page, const u8 *page_ptr, u8 *dest, int bytes_to_copy) {
+void FromPagesCopy(struct Page *page, u8 *page_ptr, u8 *dest, int bytes_to_copy) {
+    u32 in_page_size = (page->ptr - page_ptr) + 1;
+
     while (bytes_to_copy) {
+        if (bytes_to_copy < in_page_size) {
+            memcpy(dest, page_ptr, bytes_to_copy);
+            bytes_to_copy = 0;
+        } else {
+            memcpy(dest, page_ptr, in_page_size);
+            dest += in_page_size;
+            bytes_to_copy -= in_page_size;
+            if (page->next) {
+                page = page->next;
+                page_ptr = page->buffer;
+                in_page_size = (page->ptr - page_ptr) + 1;
+            }
+        }
     }
 }
 #endif

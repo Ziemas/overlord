@@ -30,4 +30,7 @@ void snd_UnloadBank(SoundBankPtr bank);
 void snd_ResolveBankXREFS();
 void snd_SetPlaybackMode(SInt32 mode);
 
+SInt32 snd_GetFreeSPUDMA();
+void snd_FreeSPUDMA(SInt32 ch);
+
 #endif // _989SND_H_

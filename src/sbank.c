@@ -22,22 +22,22 @@ void InitBanks() {
         gBanks[i]->unk30 = 0;
     }
 
-    strncpy(gBanks[0]->name, "common", 16);
+    strncpy(gBanks[0]->slot_name, "common", 16);
     gBanks[0]->spu_loc = 0x20000;
     gBanks[0]->spu_size = 0xAFCC0;
-    strncpy(gBanks[1]->name, "gun", 16);
+    strncpy(gBanks[1]->slot_name, "gun", 16);
     gBanks[1]->spu_loc = 0x131740;
     gBanks[1]->spu_size = 0;
-    strncpy(gBanks[2]->name, "board", 16);
+    strncpy(gBanks[2]->slot_name, "board", 16);
     gBanks[2]->spu_loc = 0x131740;
     gBanks[2]->spu_size = 0;
-    strncpy(gBanks[3]->name, "level0", 16);
+    strncpy(gBanks[3]->slot_name, "level0", 16);
     gBanks[3]->spu_loc = 0x131740;
     gBanks[3]->spu_size = 0x42800;
-    strncpy(gBanks[4]->name, "level1", 16);
+    strncpy(gBanks[4]->slot_name, "level1", 16);
     gBanks[4]->spu_loc = 0x173F40;
     gBanks[4]->spu_size = 0x42800;
-    strncpy(gBanks[5]->name, "level2", 16);
+    strncpy(gBanks[5]->slot_name, "level2", 16);
     gBanks[5]->spu_loc = 0x1B6740;
     gBanks[5]->spu_size = 0x42800;
 }
