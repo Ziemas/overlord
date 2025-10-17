@@ -17,7 +17,7 @@ options:
     undefined_syms_auto_path:  config/undefined_syms_auto.txt
 
     migrate_rodata_to_functions: True
-    named_regs_for_c_funcs: True
+    named_regs_for_c_funcs: False
     
     # compiler 
     compiler: GCC

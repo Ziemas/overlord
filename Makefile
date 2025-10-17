@@ -1,16 +1,14 @@
 TARGET := OVERLORD.IRX
 BUILDDIR := build
 # -gcoff for diff.py source support, actual module was -gstabs
-CFLAGS := -G0 -O2 -g3 -quiet -Wall 
+CFLAGS := -G0 -O2 -gcoff -quiet -Wall 
 LDFLAGS := -Tconfig/undefined_syms_auto.txt -Tconfig/undefined_funcs_auto.txt -T$(TARGET).ld -Map $(BUILDDIR)/$(TARGET).map
-ASFLAGS := -Iinclude -G0 -g3 -no-pad-sections
-#MASPSXFLAGS := --aspsx-version=2.78
+ASFLAGS := -Iinclude -G0 -g3 -O1 -gcoff
 CPPFLAGS := -ffreestanding -Iinclude
 
 CC := tools/gcc-2.8.1/cc1
 CPP := cpp
-MASPSX := python tools/maspsx/maspsx.py
-AS := mipsel-none-elf-as
+AS := tools/iop-as
 LD := mipsel-none-elf-ld
 OBJCOPY := mipsel-none-elf-objcopy
 

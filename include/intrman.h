@@ -25,12 +25,12 @@
 #define NULL ((void*)0)
 #endif
 
-#if defined(__LANGUAGE_C)
+//#if defined(__LANGUAGE_C)
 
 extern int CpuSuspendIntr(int *oldstat);
 extern int CpuResumeIntr(int oldstat);
 extern int QueryIntrContext(void);
 
-#endif /* if defined(__LANGUAGE_C) */
+//#endif /* if defined(__LANGUAGE_C) */
 
 #endif /* _INTRMAN_H */

@@ -28,16 +28,9 @@ int gSoundInUse = 0;
 
 INCLUDE_ASM("asm/nonmatchings/srpc", RPC_Player);
 
-#ifdef NON_MATCHING
-INCLUDE_RODATA("asm/nonmatchings/srpc", D_00012AC8);
-INCLUDE_ASM("asm/nonmatchings/srpc", RPC_Loader);
-#else
 void *RPC_Loader(unsigned int fno, void *data, int size) {
     struct SoundRpcCommand *cmd = data;
-    struct BankRecord *bank;
-    SoundBankPtr handle;
     int count;
-    int pmode;
 
     static char *languages[] = {
         "ENG", "FRE", "GER", "SPA", "ITA", "JAP", "KOR", "UKE",
@@ -49,9 +42,11 @@ void *RPC_Loader(unsigned int fno, void *data, int size) {
     }
 
     for (; count > 0; count--, cmd++) {
+        void *p = cmd;
         switch (cmd->command) {
         case SCMD_LOAD_BANK: {
-            struct SoundRpcBankCommand *load_bank = &cmd->u.load_bank;
+            struct SoundRpcBankCommand *load_bank = p;
+            struct BankRecord *bank;
             bank = LookupBank(load_bank->bank_name);
             if (bank) {
                 break;
@@ -67,7 +62,9 @@ void *RPC_Loader(unsigned int fno, void *data, int size) {
         } break;
 
         case SCMD_UNLOAD_BANK: {
-            struct SoundRpcBankCommand *load_bank = &cmd->u.load_bank;
+            struct SoundRpcBankCommand *load_bank = p;
+            struct BankRecord *bank;
+            SoundBankPtr handle;
             bank = LookupBank(load_bank->bank_name);
             if (!bank) {
                 break;
@@ -83,17 +80,18 @@ void *RPC_Loader(unsigned int fno, void *data, int size) {
         } break;
 
         case SCMD_LOAD_MUSIC: {
-            struct SoundRpcBankCommand *load_bank = &cmd->u.load_bank;
+            struct SoundRpcBankCommand *load_bank = p;
             while (WaitSema(gSema))
                 ;
             if (gMusic) {
                 UnLoadMusic(&gMusic);
             }
             LoadMusic(load_bank->bank_name, &gMusic);
+            SignalSema(gSema);
         } break;
 
         case SCMD_UNLOAD_MUSIC: {
-            struct SoundRpcBankCommand *load_bank = &cmd->u.load_bank;
+            struct SoundRpcBankCommand *load_bank = p;
             while (WaitSema(gSema))
                 ;
 
@@ -104,18 +102,19 @@ void *RPC_Loader(unsigned int fno, void *data, int size) {
             SignalSema(gSema);
         } break;
         case SCMD_GET_IRX_VERSION: {
-            struct SoundRpcGetIrxVersion *irx_version = &cmd->u.irx_version;
+            struct SoundRpcGetIrxVersion *irx_version = p;
             irx_version->major = 4;
             irx_version->minor = 0;
             gInfoEE = irx_version->ee_addr;
-            return cmd;
+            return p;
         } break;
         case SCMD_SET_LANGUAGE: {
-            struct SoundRpcSetLanguageCommand *set_language = &cmd->u.set_language;
+            struct SoundRpcSetLanguageCommand *set_language = p;
             gLanguage = languages[set_language->language_id];
         } break;
         case SCMD_SET_STEREO_MODE: {
-            struct SoundRpcStereoMode *stereo_mode = &cmd->u.stereo_mode;
+            struct SoundRpcStereoMode *stereo_mode = p;
+            int pmode;
             switch (stereo_mode->stereo_mode) {
             case 0:
                 pmode = 1;
@@ -141,7 +140,6 @@ void *RPC_Loader(unsigned int fno, void *data, int size) {
 
     return NULL;
 }
-#endif
 
 INCLUDE_ASM("asm/nonmatchings/srpc", VBlank_Handler);
 

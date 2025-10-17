@@ -6,7 +6,7 @@
 
 struct BankRecord {
     char name[16];
-    u32 unk10[4];
+    char slot_name[16];
 
     u32 spu_loc;
     u32 spu_size;

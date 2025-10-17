@@ -50,21 +50,29 @@ struct SoundParams {
 };
 
 struct SoundRpcGetIrxVersion {
+    short rsvd1;
+    u16 command;
     u32 major;
     u32 minor;
     u32 ee_addr;
 };
 
 struct SoundRpcBankCommand {
+    short rsvd1;
+    u16 command;
     u8 pad[12];
     char bank_name[16];
 };
 
 struct SoundRpcSetLanguageCommand {
+    short rsvd1;
+    u16 command;
     u32 language_id;
 };
 
 struct SoundRpcPlayCommand {
+    short rsvd1;
+    u16 command;
     u32 sound_id;
     u32 pad[2];
     char name[16];
@@ -72,6 +80,8 @@ struct SoundRpcPlayCommand {
 };
 
 struct SoundRpcSetParamCommand {
+    short rsvd1;
+    u16 command;
     u32 sound_id;
     struct SoundParams parms;
     s32 auto_time;
@@ -79,14 +89,20 @@ struct SoundRpcSetParamCommand {
 };
 
 struct SoundRpcSoundIdCommand {
+    short rsvd1;
+    u16 command;
     u32 sound_id;
 };
 
 struct SoundRpcSetFlavaCommand {
+    short rsvd1;
+    u16 command;
     u8 flava;
 };
 
 struct SoundRpcSetReverb {
+    short rsvd1;
+    u16 command;
     u8 core;
     s32 reverb;
     u32 left;
@@ -94,12 +110,16 @@ struct SoundRpcSetReverb {
 };
 
 struct SoundRpcSetEarTrans {
+    short rsvd1;
+    u16 command;
     s32 ear_trans[3];
     s32 cam_trans[3];
     s32 cam_angle;
 };
 
 struct SoundRpc2SetEarTrans {
+    short rsvd1;
+    u16 command;
     s32 ear_trans1[3];
     s32 ear_trans0[3];
     s32 cam_trans[3];
@@ -107,10 +127,14 @@ struct SoundRpc2SetEarTrans {
 };
 
 struct SoundRpcSetFPSCommand {
+    short rsvd1;
+    u16 command;
     u8 fps;
 };
 
 struct SoundRpcSetFallof {
+    short rsvd1;
+    u16 command;
     u8 pad[12];
     char name[16];
     s32 curve;
@@ -119,25 +143,35 @@ struct SoundRpcSetFallof {
 };
 
 struct SoundRpcSetFallofCurve {
+    short rsvd1;
+    u16 command;
     s32 curve;
     s32 falloff;
     s32 ease;
 };
 
 struct SoundRpcGroupCommand {
+    short rsvd1;
+    u16 command;
     u8 group;
 };
 
 struct SoundRpcMasterVolCommand {
+    short rsvd1;
+    u16 command;
     struct SoundRpcGroupCommand group;
     s32 volume;
 };
 
 struct SoundRpcStereoMode {
+    short rsvd1;
+    u16 command;
     s32 stereo_mode;
 };
 
 struct SoundRpcSetMidiReg {
+    short rsvd1;
+    u16 command;
     s32 reg;
     s32 value;
 };
@@ -199,26 +233,7 @@ enum SOUND_COMMAND {
 struct SoundRpcCommand {
     short rsvd1;
     u16 command;
-    union {
-        struct SoundRpcGetIrxVersion irx_version;
-        struct SoundRpcBankCommand load_bank;
-        struct SoundRpcSetLanguageCommand set_language;
-        struct SoundRpcPlayCommand play;
-        struct SoundRpcSoundIdCommand sound_id;
-        struct SoundRpcSetFPSCommand fps;
-        struct SoundRpcSetEarTrans ear_trans;
-        struct SoundRpc2SetEarTrans ear_trans_j2;
-        struct SoundRpcSetReverb reverb;
-        struct SoundRpcSetFallof fallof;
-        struct SoundRpcSetFallofCurve fallof_curve;
-        struct SoundRpcGroupCommand group;
-        struct SoundRpcSetFlavaCommand flava;
-        struct SoundRpcMasterVolCommand master_volume;
-        struct SoundRpcSetParamCommand param;
-        struct SoundRpcStereoMode stereo_mode;
-        struct SoundRpcSetMidiReg midi_reg;
-        u8 max_size[0x4c]; // Temporary
-    } u;
+    u8 max_size[0x4c];
 };
 
 #endif // COMMON_H_
