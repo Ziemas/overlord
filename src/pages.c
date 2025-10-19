@@ -10,7 +10,7 @@ struct Page *AllocPages(struct PageList *page_list, u32 num_pages);
 
 INCLUDE_RODATA("asm/nonmatchings/pages", D_00013110);
 
-#ifndef NON_MATCHING
+#ifdef NON_MATCHING
 INCLUDE_ASM("asm/nonmatchings/pages", InitPagedMemory);
 #else
 void InitPagedMemory(struct PageList *pool, int pages, int page_size) {
@@ -18,8 +18,9 @@ void InitPagedMemory(struct PageList *pool, int pages, int page_size) {
     u8 *mem;
     int i;
 
-    pool->pages = (struct Page *)&pool[1];
     ScratchPadMemory += pages * sizeof(struct Page);
+
+    pool->pages = (struct Page *)&pool[1];
     pool->page_count = pages;
     pool->page_size = page_size;
     pool->sector_per_page = page_size / 2048;
@@ -37,13 +38,9 @@ void InitPagedMemory(struct PageList *pool, int pages, int page_size) {
             ;
     }
 
-    // if (pages <= 0) {
-    //     return;
-    // }
-
     pool->page_memory = mem;
     page = pool->pages;
-    for (; i < pages; i++) {
+    while (pages) {
         page->state = 0;
         page->buffer = mem;
         page->page_idx = i;
@@ -54,6 +51,8 @@ void InitPagedMemory(struct PageList *pool, int pages, int page_size) {
         page->end_page_first_only = 0;
         mem += page_size;
         page++;
+        pages--;
+        i++;
     }
 }
 #endif
@@ -65,11 +64,8 @@ struct Page *AllocPagesBytes(struct PageList *page_list, s32 size_bytes) {
 
 INCLUDE_ASM("asm/nonmatchings/pages", AllocPages);
 
-#ifdef NON_MATCHING
-INCLUDE_ASM("asm/nonmatchings/pages", FreePagesList);
-#else
 struct Page *FreePagesList(struct PageList *page_list, struct Page *pages) {
-    struct Page *next;
+    struct Page *i, *n;
 
     if (!pages) {
         return NULL;
@@ -83,22 +79,23 @@ struct Page *FreePagesList(struct PageList *page_list, struct Page *pages) {
             ;
     }
 
+    i = pages;
     while (1) {
-        next = pages->next;
-        pages->prev = NULL;
-        pages->next = NULL;
-        pages->end_page_first_only = NULL;
-        pages->state = PAGE_FREE;
+        n = i->next;
+        i->prev = NULL;
+        i->next = NULL;
+        i->end_page_first_only = NULL;
+        i->state = PAGE_FREE;
         page_list->free_pages = page_list->free_pages + 1;
-        pages = next;
-        if (!pages) {
+        i = n;
+
+        if (!i) {
             break;
         }
     }
 
     return NULL;
 }
-#endif
 
 struct Page *StepTopPage(struct PageList *list, struct Page *top_page) {
     struct Page *next;

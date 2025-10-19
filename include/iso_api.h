@@ -47,7 +47,7 @@ struct iso_message {
     int thread_id;
     int ready_for_data;
     struct Buffer *cb_buf;
-    int(*callback)(struct iso_message *, struct iso_buffer_header *);
+    int (*callback)(struct iso_message *, struct Buffer *);
     struct load_stack_entry *lse;
 };
 

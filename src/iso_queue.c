@@ -1,3 +1,5 @@
+#include "iso_queue.h"
+
 #include "common.h"
 
 int AllocdBuffersCount = 0;
@@ -21,6 +23,8 @@ char VAG_SilentLoop[48] = {
 int vag_cmd_used = 0;
 int vag_cmd_cnt = 0;
 int max_vag_cmd_cnt = 0;
+
+struct PriStackEntry gPriStack[4];
 
 INCLUDE_ASM("asm/nonmatchings/iso_queue", InitBuffers);
 
