@@ -14,7 +14,60 @@ struct VagCmd *DmaStereoVagCmd;
 static sceSifDmaData dma;
 
 int SpuDmaIntr(int, void *);
-void EeDmaIntr();
+
+void EeDmaIntr() { iSignalSema(EeDmaSema); }
+
+void DMA_SendToEE(u8 *iop_mem, u32 size, u32 ee_addr) {
+    struct SemaParam sema;
+    int oldintr;
+    int ret;
+
+    if (!size) {
+        return;
+    }
+
+    if (!EeDmaSema) {
+        sema.attr = 1;
+        sema.initCount = 0;
+        sema.maxCount = 1;
+        sema.option = 0;
+        EeDmaSema = CreateSema(&sema);
+    } else {
+        if (PollSema(EeDmaSema) == KE_SEMA_ZERO)
+            WaitSema(EeDmaSema);
+    }
+
+    dma.data = (u32)iop_mem;
+    dma.addr = ee_addr;
+    dma.size = size;
+    dma.mode = 0;
+
+    CpuSuspendIntr(&oldintr);
+    ret = sceSifSetDmaIntr(&dma, 1, EeDmaIntr, NULL);
+    CpuResumeIntr(oldintr);
+
+    if (!ret) {
+        while (1)
+            ;
+    }
+}
+
+void DmaCancelThisVagCmd(struct VagCmd *cmd) {
+    int channel;
+
+    if (DmaVagCmd != cmd) {
+        return;
+    }
+
+    sceSdSetTransIntrHandler(DmaVagCmd->transfer_channel, NULL, NULL);
+    channel = DmaVagCmd->transfer_channel;
+    if (channel >= 0) {
+        snd_FreeSPUDMA(channel);
+    }
+    DmaVagCmd = NULL;
+    DmaStereoVagCmd = NULL;
+    SpuDmaStatus = 0;
+}
 
 int SpuDmaIntr(int channel, void *userdata) {
     int kon, koff;
@@ -123,41 +176,6 @@ int SpuDmaIntr(int channel, void *userdata) {
     return 0;
 }
 
-void DMA_SendToEE(u8 *iop_mem, u32 size, u32 ee_addr) {
-    struct SemaParam sema;
-    int oldintr;
-    int ret;
-
-    if (!size) {
-        return;
-    }
-
-    if (!EeDmaSema) {
-        sema.attr = 1;
-        sema.initCount = 0;
-        sema.maxCount = 1;
-        sema.option = 0;
-        EeDmaSema = CreateSema(&sema);
-    } else {
-        if (PollSema(EeDmaSema) == KE_SEMA_ZERO)
-            WaitSema(EeDmaSema);
-    }
-
-    dma.data = (u32)iop_mem;
-    dma.addr = ee_addr;
-    dma.size = size;
-    dma.mode = 0;
-
-    CpuSuspendIntr(&oldintr);
-    ret = sceSifSetDmaIntr(&dma, 1, EeDmaIntr, NULL);
-    CpuResumeIntr(oldintr);
-
-    if (!ret) {
-        while (1)
-            ;
-    }
-}
-
 bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct VagCmd *cmd, int disable_intr) {
     struct VagCmd *sibling;
     int transferred;
@@ -211,22 +229,3 @@ bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct V
 
     return true;
 }
-
-void DmaCanccelThisVagCmd(struct VagCmd *cmd) {
-    int channel;
-
-    if (DmaVagCmd != cmd) {
-        return;
-    }
-
-    sceSdSetTransIntrHandler(DmaVagCmd->transfer_channel, NULL, NULL);
-    channel = DmaVagCmd->transfer_channel;
-    if (channel >= 0) {
-        snd_FreeSPUDMA(channel);
-    }
-    DmaVagCmd = NULL;
-    DmaStereoVagCmd = NULL;
-    SpuDmaStatus = 0;
-}
-
-void EeDmaIntr() { iSignalSema(EeDmaSema); }

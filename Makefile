@@ -3,7 +3,7 @@ BUILDDIR := build
 # -gcoff for diff.py source support, actual module was -gstabs
 CFLAGS := -G0 -O3 -quiet -Wall 
 LDFLAGS := -Tconfig/undefined_syms_auto.txt -Tconfig/undefined_funcs_auto.txt -T$(TARGET).ld -Map $(BUILDDIR)/$(TARGET).map
-ASFLAGS := -Iinclude -G0 -g3 -O1 -gcoff
+ASFLAGS := -Iinclude -G0 -g3 -gcoff
 MODERN_ASFLAGS := -Iinclude
 CPPFLAGS := -ffreestanding -Iinclude
 

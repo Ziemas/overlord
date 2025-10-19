@@ -1,13 +1,15 @@
-#include <intrman.h>
-
 #include "common.h"
 #include "dma.h"
 #include "iso_queue.h"
-#include "libsd.h"
-#include "sysmem.h"
+#include "srpc.h"
+#include "streamlfo.h"
+#include "streamlist.h"
 #include "vag.h"
 
-int StreamsThread;
+#include <intrman.h>
+#include <libsd.h>
+#include <string.h>
+#include <sysmem.h>
 
 void VAG_MarkLoopEnd(u8 *data, int offset);
 void VAG_MarkLoopStart(u8 *data);
@@ -16,6 +18,27 @@ int ProcessVAGData(struct VagCmd *vag, struct Buffer *buf);
 
 void CheckVagStreamsProgress();
 void UpdateIsoBuffer(struct Buffer *buf, struct VagCmd *vag, int stereo);
+
+void InitSpuStreamsThread() {
+    struct ThreadParam th;
+
+    th.attr = TH_C;
+    th.entry = CheckVagStreamsProgress;
+    th.initPriority = 50;
+    th.stackSize = 0x800;
+    th.option = 0;
+    StreamsThread = CreateThread(&th);
+
+    if (StreamsThread <= 0) {
+        Kprintf("IOP: ======================================================================\n");
+        Kprintf("IOP: spustreams InitSpuStreamsThread: Cannot create streams thread\n");
+        Kprintf("IOP: ======================================================================\n");
+        while (1)
+            ;
+    }
+
+    StartThread(StreamsThread, 0);
+}
 
 u32 bswap(s32 in) { return ((u32)(in) >> 24) | (((s32)in) >> 8) & 0xFF00 | ((in) << 8) & 0xFF0000 | ((in) << 24); }
 
@@ -138,9 +161,9 @@ int ProcessVAGData(struct VagCmd *vag, struct Buffer *buf) {
                 vag->unk_264 = 0x2010;
             } else {
                 if (sibling) {
-                    vag->unk_264 = vag->data_left / 2 + 0x1ff0;
+                    vag->unk_264 = 0x2010 + vag->data_left / 2 - 0x20;
                 } else {
-                    vag->unk_264 = vag->data_left + 0x1ff0;
+                    vag->unk_264 = 0x2010 + vag->data_left - 0x20;
                 }
             }
 
@@ -166,9 +189,9 @@ int ProcessVAGData(struct VagCmd *vag, struct Buffer *buf) {
                 vag->unk_264 = 0x2010;
             } else {
                 if (sibling) {
-                    vag->unk_264 = vag->data_left / 2 + 0x1ff0;
+                    vag->unk_264 = 0x2010 + vag->data_left / 2 - 0x20;
                 } else {
-                    vag->unk_264 = vag->data_left + 0x1ff0;
+                    vag->unk_264 = 0x2010 + vag->data_left - 0x20;
                 }
             }
             if (sibling) {
@@ -193,9 +216,9 @@ int ProcessVAGData(struct VagCmd *vag, struct Buffer *buf) {
                 vag->unk_264 = 0x10;
             } else {
                 if (sibling) {
-                    vag->unk_264 = vag->data_left / 2 - 0x10;
+                    vag->unk_264 = 0x10 + vag->data_left / 2 - 0x20;
                 } else {
-                    vag->unk_264 = vag->data_left - 0x10;
+                    vag->unk_264 = 0x10 + vag->data_left - 0x20;
                 }
             }
             if (sibling) {
@@ -219,42 +242,6 @@ int ProcessVAGData(struct VagCmd *vag, struct Buffer *buf) {
     CpuResumeIntr(oldintr);
     return -1;
 }
-
-INCLUDE_RODATA("asm/nonmatchings/spustreams", D_00013020);
-
-INCLUDE_RODATA("asm/nonmatchings/spustreams", D_00013070);
-
-INCLUDE_ASM("asm/nonmatchings/spustreams", GetVAGStreamPos);
-
-INCLUDE_ASM("asm/nonmatchings/spustreams", CheckVAGStreamProgress);
-
-INCLUDE_ASM("asm/nonmatchings/spustreams", CheckVagStreamsProgress);
-
-INCLUDE_ASM("asm/nonmatchings/spustreams", StopVagStream);
-
-void InitSpuStreamsThread() {
-    struct ThreadParam th;
-
-    th.attr = TH_C;
-    th.entry = CheckVagStreamsProgress;
-    th.initPriority = 50;
-    th.stackSize = 0x800;
-    th.option = 0;
-
-    StreamsThread = CreateThread(&th);
-
-    if (StreamsThread <= 0) {
-        Kprintf("IOP: ======================================================================\n");
-        Kprintf("IOP: spustreams InitSpuStreamsThread: Cannot create streams thread\n");
-        Kprintf("IOP: ======================================================================\n");
-        while (1)
-            ;
-    }
-
-    StartThread(StreamsThread, 0);
-}
-
-void WakeSpuStreamsUp() { WakeupThread(StreamsThread); }
 
 // INCLUDE_ASM("asm/nonmatchings/spustreams", GetSpuRamAddress);
 u32 GetSpuRamAddress(struct VagCmd *cmd) {
@@ -302,6 +289,56 @@ u32 GetSpuRamAddress(struct VagCmd *cmd) {
     return address;
 }
 
+INCLUDE_RODATA("asm/nonmatchings/spustreams", D_00013020);
+
+INCLUDE_RODATA("asm/nonmatchings/spustreams", D_00013070);
+
+INCLUDE_ASM("asm/nonmatchings/spustreams", GetVAGStreamPos);
+
+INCLUDE_ASM("asm/nonmatchings/spustreams", CheckVAGStreamProgress);
+
+// INCLUDE_ASM("asm/nonmatchings/spustreams", StopVagStream);
+void StopVagStream(struct VagCmd *vag, int disable_intr) {
+    struct VagStreamListNode vstream;
+    struct LfoListNode lfo;
+    struct VagCmd *sibling;
+    int oldintr;
+
+    if (disable_intr == 1) {
+        CpuSuspendIntr(&oldintr);
+    }
+
+    sibling = vag->sibling;
+
+    vag->status[1] = 0;
+    if (sibling) {
+        sibling->status[1] = 0;
+    }
+
+    if (vag->sound_handler) {
+        PauseVAG(vag, 0);
+        strncpy(vstream.name, vag->name, 48);
+        vstream.id = vag->id;
+        RemoveVagStreamFromList(&vstream, &PluginStreamsList);
+        RemoveVagStreamFromList(&vstream, &EEPlayList);
+        lfo.unk0x24 = vag->id;
+        lfo.unk0x28 = vag->unk118;
+        RemoveLfoStreamFromList(&lfo, &LfoList);
+    } else {
+        PauseVAG(vag, 0);
+        vag->status[9] = 1;
+        if (sibling) {
+            PauseVAG(sibling, 0);
+            // BUG ??
+            vag->status[9] = 1;
+        }
+    }
+
+    if (disable_intr == 1) {
+        CpuResumeIntr(oldintr);
+    }
+}
+
 void ProcessStreamData() {
     struct PriStackEntry *ent;
     struct iso_message *msg;
@@ -346,3 +383,7 @@ void ProcessStreamData() {
         }
     }
 }
+
+void WakeSpuStreamsUp() { WakeupThread(StreamsThread); }
+
+INCLUDE_ASM("asm/nonmatchings/spustreams", CheckVagStreamsProgress);
