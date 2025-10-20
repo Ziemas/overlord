@@ -564,7 +564,7 @@ void PauseVAG(struct VagCmd *vag, int disable_intr) {
             sceSdSetSwitch(SD_S_KOFF | CORE_BIT(vag->voice), koff);
 
             if (vag->status[5]) {
-                vag->resume_addr = GetSpuRamAddress(vag) & ~7;
+                vag->resume_addr = addr = GetSpuRamAddress(vag) & ~0x7;
                 sibling->resume_addr = (vag->resume_addr - vag->spu_base_addr) + sibling->spu_base_addr;
             } else {
                 vag->resume_addr = 0;
@@ -736,14 +736,10 @@ void UnPauseVagStreams() {
     }
 }
 
-// INCLUDE_ASM("asm/nonmatchings/vag", CalculateVAGVolumes);
-
 void CalculateVAGVolumes(struct VagCmd *vag, int *out_left, int *out_right) {
-    struct VolumePair *pan;
-    u32 angle;
-    int vol;
-
     if (!vag->positioned) {
+        s32 vol;
+
         vol = (vag->volume * MasterVolume[2]) >> 6;
         if (vol >= 0x4000) {
             vol = 0x3fff;
@@ -751,13 +747,18 @@ void CalculateVAGVolumes(struct VagCmd *vag, int *out_left, int *out_right) {
         *out_left = vol;
         *out_right = vol;
     } else {
+        struct VolumePair *pan;
+        u32 angle;
+        u32 vol;
+
         vol = CalculateFalloffVolume(vag->trans, (vag->volume * MasterVolume[2]) >> 10, vag->fo_curve, vag->fo_min,
                                      vag->fo_max);
 
-        angle = CalculateAngle(vag->trans);
-        pan = &gPanTable[(630 - angle) % 360];
-        *out_left = (vol * pan->left) >> 10;
-        *out_right = (vol * pan->right) >> 10;
+        angle = (u32)(630 - CalculateAngle(vag->trans)) % 360;
+        pan = &gPanTable[angle];
+
+        *out_left = (pan->left * vol) >> 10;
+        *out_right = (pan->right * vol) >> 10;
 
         if (*out_left >= 0x4000) {
             *out_left = 0x3fff;
@@ -769,31 +770,117 @@ void CalculateVAGVolumes(struct VagCmd *vag, int *out_left, int *out_right) {
     }
 }
 
-// INCLUDE_ASM("asm/nonmatchings/vag", CalculateVAGPitch);
-int CalculateVAGPitch(int pitch1, int pitch2) {
-    if (!pitch2) {
-        return pitch1;
+int CalculateVAGPitch(u32 base, s32 mod) {
+    if (mod != 0) {
+        if (mod > 0) {
+            base = (base * (mod + 1524)) / 1524;
+        } else {
+            base = 1524 * base / (1524 - mod);
+        }
     }
 
-    if (pitch2 <= 0) {
-        return 1524 * pitch1 / (1524 - pitch2);
-    }
-
-    return pitch1 * (pitch2 + 1524) / 1524;
+    return base;
 }
 
 // INCLUDE_ASM("asm/nonmatchings/vag", SetVAGVol);
 void SetVAGVol(struct VagCmd *vag, int disable_intr) {
     struct VagCmd *sibling;
+    GSoundHandlerPtr sndhnd;
+    sceSdBatch batch[6];
+    int pitch, batch_count;
     int voll, volr;
+    int oldstat;
 
     if (vag && vag->status[4] && !vag->status[2] && !vag->status[11]) {
         CalculateVAGVolumes(vag, &voll, &volr);
+        sndhnd = vag->sound_handler;
+        sibling = sibling;
+        if (sndhnd) {
+            // TODO
+        }
+
+        if (sibling) {
+            batch[0].func = 1;
+            batch[0].entry = SD_VP_VOLL | vag->voice;
+            batch[0].value = voll;
+
+            batch[1].func = 1;
+            batch[1].entry = SD_VP_VOLL | sibling->voice;
+            batch[1].value = 0;
+
+            batch[2].func = 1;
+            batch[2].entry = SD_VP_VOLR | vag->voice;
+            batch[2].value = 0;
+
+            batch[3].func = 1;
+            batch[3].entry = SD_VP_VOLR | sibling->voice;
+            batch[3].value = volr;
+
+            pitch = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
+            batch[4].func = 1;
+            batch[4].entry = SD_VP_PITCH | vag->voice;
+            batch[4].value = pitch;
+
+            batch[5].func = 1;
+            batch[5].entry = SD_VP_PITCH | sibling->voice;
+            batch[5].value = pitch;
+            batch_count = 6;
+        } else {
+            batch[0].func = 1;
+            batch[0].entry = SD_VP_VOLL | vag->voice;
+            batch[0].value = voll;
+
+            batch[1].func = 1;
+            batch[1].entry = SD_VP_VOLR | vag->voice;
+            batch[1].value = volr;
+
+            pitch = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
+            batch[3].func = 1;
+            batch[3].entry = SD_VP_PITCH | vag->voice;
+            batch[3].value = pitch;
+
+            batch_count = 3;
+        }
+
+        if (disable_intr == 1) {
+            CpuSuspendIntr(&oldstat);
+            sceSdProcBatch(batch, NULL, batch_count);
+            CpuResumeIntr(oldstat);
+        } else {
+            sceSdProcBatch(batch, NULL, batch_count);
+        }
     }
 }
 
-INCLUDE_ASM("asm/nonmatchings/vag", SetAllVagsVol);
+void SetAllVagsVol(int group) {
+    GSoundHandlerPtr sndhnd;
+    struct VagCmd *vag;
+    int i;
 
-INCLUDE_ASM("asm/nonmatchings/vag", VAG_MarkLoopEnd);
+    vag = VagCmds;
 
-INCLUDE_ASM("asm/nonmatchings/vag", VAG_MarkLoopStart);
+    if (group < 0) {
+        for (i = 0; i < 4; i++) {
+            SetVAGVol(vag, 1);
+            vag++;
+        }
+    } else {
+        for (i = 0; i < 4; i++) {
+            sndhnd = vag->sound_handler;
+            if (sndhnd) {
+                if (sndhnd->VolGroup == group) {
+                    SetVAGVol(vag, 1);
+                }
+
+                vag++;
+            }
+        }
+    }
+}
+
+void VAG_MarkLoopStart(char *data) {
+    data[1] = 6;
+    data[17] = 2;
+}
+
+void VAG_MarkLoopEnd(char *data, int offset) { data[offset - 15] = 3; }
