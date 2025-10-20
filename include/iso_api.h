@@ -6,28 +6,21 @@
 #include "sbank.h"
 #include "thread.h"
 
-struct iso_buffer_header {
-    void *data;
-    int data_size;
-    unsigned int buffer_size;
-    void *next;
-};
-
-struct file_record {
+struct ISOFileDef {
     char name[12];
     unsigned int location;
     unsigned int size;
 };
 
 struct load_stack_entry {
-    struct file_record *fr;
+    struct ISOFileDef *fr;
     unsigned int location;
 };
 
-struct Buffer {
+struct ISOBuffer {
     u8 *decomp_buffer;
     int decompressed_size;
-    struct Buffer *next;
+    struct ISOBuffer *next;
     u8 *unk_12;
     int data_buffer_idx;
     int use_mode;
@@ -39,15 +32,15 @@ struct Buffer {
     int unk_44;
 };
 
-struct iso_message {
+struct ISO_Hdr {
     struct MsgPacket pkt;
     int cmd_id;
     int status;
     int messagebox_to_reply;
     int thread_id;
     int ready_for_data;
-    struct Buffer *cb_buf;
-    int (*callback)(struct iso_message *, struct Buffer *);
+    struct ISOBuffer *cb_buf;
+    int (*callback)(struct ISO_Hdr *, struct ISOBuffer *);
     struct load_stack_entry *lse;
 };
 

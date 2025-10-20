@@ -19,7 +19,7 @@ void EeDmaIntr() { iSignalSema(EeDmaSema); }
 
 void DMA_SendToEE(u8 *iop_mem, u32 size, u32 ee_addr) {
     struct SemaParam sema;
-    int oldintr;
+    int oldstat;
     int ret;
 
     if (!size) {
@@ -42,9 +42,9 @@ void DMA_SendToEE(u8 *iop_mem, u32 size, u32 ee_addr) {
     dma.size = size;
     dma.mode = 0;
 
-    CpuSuspendIntr(&oldintr);
+    CpuSuspendIntr(&oldstat);
     ret = sceSifSetDmaIntr(&dma, 1, EeDmaIntr, NULL);
-    CpuResumeIntr(oldintr);
+    CpuResumeIntr(oldstat);
 
     if (!ret) {
         while (1)
@@ -180,15 +180,15 @@ bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct V
     struct VagCmd *sibling;
     int transferred;
     int channel;
-    int oldintr;
+    int oldstat;
 
     if (disable_intr == 1) {
-        CpuSuspendIntr(&oldintr);
+        CpuSuspendIntr(&oldstat);
     }
 
     if (SpuDmaStatus) {
         if (disable_intr == 1) {
-            CpuResumeIntr(oldintr);
+            CpuResumeIntr(oldstat);
         }
         return false;
     }
@@ -196,7 +196,7 @@ bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct V
     channel = snd_GetFreeSPUDMA();
     if (channel == -1) {
         if (disable_intr == 1) {
-            CpuResumeIntr(oldintr);
+            CpuResumeIntr(oldstat);
         }
         return false;
     }
@@ -219,7 +219,7 @@ bool DMA_SendToSPUAndSync(u8 *iop_mem, u32 size_one_side, u32 spu_addr, struct V
     transferred = sceSdVoiceTrans(channel, 0, iop_mem, spu_addr, size_one_side);
 
     if (disable_intr == 1) {
-        CpuResumeIntr(oldintr);
+        CpuResumeIntr(oldstat);
     }
 
     size_one_side = ((size_one_side + 63) & ~63);

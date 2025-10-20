@@ -25,6 +25,7 @@ int vag_cmd_cnt = 0;
 int max_vag_cmd_cnt = 0;
 
 struct PriStackEntry gPriStack[4];
+int VagCmdsPriCounter[11];
 
 INCLUDE_ASM("asm/nonmatchings/iso_queue", InitBuffers);
 
