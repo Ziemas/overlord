@@ -356,32 +356,32 @@ int GetVAGStreamPos(struct VagCmd *vag) {
             }
         } else {
             if (addr1 < 0x2000) {
-                if (vag->status[0x15] == 0) {
-                    vag->status[0x15] = 1;
-                    vag->status[0x16] = 0;
-                    vag->status[0x14] = 0;
+                if (vag->status[21] == 0) {
+                    vag->status[21] = 1;
+                    vag->status[22] = 0;
+                    vag->status[20] = 0;
                     vag->unk0xcc += 1;
                 }
             } else {
-                if (vag->status[0x16] == 0) {
-                    vag->status[0x16] = 1;
-                    vag->status[0x15] = 0;
-                    vag->status[0x14] = 0;
+                if (vag->status[22] == 0) {
+                    vag->status[22] = 1;
+                    vag->status[21] = 0;
+                    vag->status[20] = 0;
                     vag->unk0xcc += 1;
                 }
             }
 
             if (addr2 < 0x2000) {
-                if (sibling->status[0x15] == 0) {
-                    sibling->status[0x15] = 1;
-                    sibling->status[0x16] = 0;
-                    sibling->status[0x14] = 0;
+                if (sibling->status[21] == 0) {
+                    sibling->status[21] = 1;
+                    sibling->status[22] = 0;
+                    sibling->status[20] = 0;
                     sibling->unk0xcc += 1;
                 }
-            } else if (sibling->status[0x16] == 0) {
-                sibling->status[0x16] = 1;
-                sibling->status[0x15] = 0;
-                sibling->status[0x14] = 0;
+            } else if (sibling->status[22] == 0) {
+                sibling->status[22] = 1;
+                sibling->status[21] = 0;
+                sibling->status[20] = 0;
                 sibling->unk0xcc += 1;
             }
         }
@@ -577,11 +577,12 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         }
 
         if (vag->unk0xcc) {
-            vag->vagClockS = addr1 + ((vag->unk0xcc - 1) << 13);
-            sibling->vagClockS = addr2 + ((sibling->unk0xcc - 1) << 13);
+            vag->vagClockS = addr1 + ((vag->unk0xcc - 1) * 0x2000);
+            sibling->vagClockS = addr2 + ((sibling->unk0xcc - 1) * 0x2000);
             if (addr1 > 0x2000) {
                 vag->vagClockS -= 0x2000;
             }
+
             if (addr2 > 0x2000) {
                 sibling->vagClockS -= 0x2000;
             }
@@ -593,37 +594,30 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         // probably like jak1?
         // vagclock = 4 * (0x1c00 * (vag->vagClockS / 16) / vag->sample_rate);
 
-        { /* 'vagclock' needs to be a new variable. */
-            int vagclock = vag->vagClockS * 0x1c0;
-            if (vag->sample_rate == 0) {
-                vagclock = 0;
-            } else {
-                vagclock = (vagclock / vag->sample_rate);
-            }
-
-            vagclock *= 4;
-            vag->vagClock_unk1 = vagclock;
-            vag->vagClock_unk2 = vagclock;
-            vag->playPos = addr1;
+        vagclock = (vag->vagClockS * 0x1c00) / 16;
+        if (vag->sample_rate == 0) {
+            vagclock = 0;
+        } else {
+            vagclock = (vagclock / vag->sample_rate);
         }
 
-        { /* 'vagclock' needs to be a new variable. */
-            int vagclock = sibling->vagClockS * 0x1c0;
-            if (sibling->sample_rate == 0) {
-                vagclock = 0;
-            } else {
-                vagclock = (vagclock / sibling->sample_rate);
-            }
+        vagclock *= 4;
+        vag->vagClock_unk1 = vagclock;
+        vag->vagClock_unk2 = vagclock;
+        vag->playPos = addr1;
 
-            vagclock *= 4;
-            sibling->vagClock_unk1 = vagclock;
-            sibling->vagClock_unk2 = vagclock;
-            sibling->playPos = addr2;
+        vagclock = (sibling->vagClockS * 0x1c00) / 16;
+        if (sibling->sample_rate == 0) {
+            vagclock = 0;
+        } else {
+            vagclock = (vagclock / sibling->sample_rate);
         }
 
-        // goto l_1;
+        vagclock *= 4;
+        sibling->vagClock_unk1 = vagclock;
+        sibling->vagClock_unk2 = vagclock;
+        sibling->playPos = addr2;
     } else {
-        // l_1:
         if (addr1 > 0x4000) {
             if (vag->status[20] == 0) {
                 vag->status[20] = 1;
@@ -651,7 +645,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
             }
             vag->status[18] = 0;
             vag->unkec = 2;
-        // goto LABEL_142;
         case 2:
             if (vag->status[19]) {
                 if (vag->status[20]) {
@@ -675,8 +668,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
             if (vag->status[20]) {
                 addr1 = 0x2000;
                 vag->status[17] = 1;
-                // v40 = 4;
-                // goto LABEL_171;
                 vag->status[16] = 0;
                 vag->unkec = 4;
                 break;
@@ -685,7 +676,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         case 3:
             if (vag->status[20]) {
                 addr1 = 0x2000;
-                // goto LABEL_153;
                 RestartVag(vag, 1, 1);
                 vag->unkec = 9;
                 break;
@@ -698,9 +688,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
                 vag->status[14] = 0;
                 vag->status[15] = 0;
                 vag->status[19] = 0;
-                // v38 = oldstat[0];
-                // v39 = 5;
-                // goto LABEL_167;
                 vag->unkec = 5;
                 CpuResumeIntr(oldstat);
             }
@@ -708,7 +695,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         case 4:
             addr1 = vag->playPos;
             if (vag->status[19]) {
-                // goto LABEL_153;
                 RestartVag(vag, 1, 1);
                 vag->unkec = 9;
                 break;
@@ -717,7 +703,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         case 9:
             if (vag->status[22]) {
                 vag->status[17] = 0;
-                // v41 = 3;
                 vag->unkec = 3;
             } else {
                 addr1 = vag->playPos;
@@ -727,7 +712,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
             if (vag->status[18]) {
                 if (vag->status[20]) {
                     addr1 = 0x4000;
-                    // goto LABEL_169;
                     RestartVag(vag, 0, 1);
                     vag->unkec = 8;
                     break;
@@ -738,26 +722,21 @@ int GetVAGStreamPos(struct VagCmd *vag) {
                 vag->status[14] = 1;
                 vag->status[15] = 0;
                 vag->status[13] = 0;
-                // v38 = oldstat[0];
-                // v39 = 6;
-                // goto LABEL_167;
                 vag->unkec = 6;
                 CpuResumeIntr(oldstat);
                 break;
             }
+
             if (vag->status[20]) {
                 addr1 = 0x4000;
                 vag->status[16] = 1;
                 vag->status[17] = 0;
-                // v41 = 7;
-                // goto LABEL_162;
                 vag->unkec = 7;
             }
             break;
         case 6:
             if (vag->status[20]) {
                 addr1 = 0x4000;
-                // goto LABEL_169;
                 RestartVag(vag, 0, 1);
                 vag->unkec = 8;
                 break;
@@ -769,8 +748,6 @@ int GetVAGStreamPos(struct VagCmd *vag) {
                 vag->status[14] = 0;
                 vag->status[15] = 0;
                 vag->status[18] = 0;
-                // v38 = oldstat[0];
-                // v39 = 2;
                 vag->unkec = 2;
                 CpuResumeIntr(oldstat);
             }
@@ -793,7 +770,7 @@ int GetVAGStreamPos(struct VagCmd *vag) {
         }
 
         if (vag->unk0xcc) {
-            vag->vagClockS = addr1 + ((vag->unk0xcc - 1) << 13);
+            vag->vagClockS = addr1 + ((vag->unk0xcc - 1) * 0x2000);
             if (addr1 > 0x2000) {
                 vag->vagClockS -= 0x2000;
             }
@@ -801,19 +778,17 @@ int GetVAGStreamPos(struct VagCmd *vag) {
             vag->vagClockS = addr1;
         }
 
-        { /* 'vagclock' needs to be a new variable. */
-            int vagclock = vag->vagClockS * 0x1c0;
-            if (vag->sample_rate == 0) {
-                vagclock = 0;
-            } else {
-                vagclock = (vagclock / vag->sample_rate);
-            }
-
-            vagclock *= 4;
-            vag->vagClock_unk1 = vagclock;
-            vag->vagClock_unk2 = vagclock;
-            vag->playPos = addr1;
+        vagclock = (vag->vagClockS * 0x1c00) / 16;
+        if (vag->sample_rate == 0) {
+            vagclock = 0;
+        } else {
+            vagclock = (vagclock / vag->sample_rate);
         }
+
+        vagclock *= 4;
+        vag->vagClock_unk1 = vagclock;
+        vag->vagClock_unk2 = vagclock;
+        vag->playPos = addr1;
     }
 
     return 0;

@@ -771,84 +771,119 @@ void CalculateVAGVolumes(struct VagCmd *vag, int *out_left, int *out_right) {
 }
 
 int CalculateVAGPitch(u32 base, s32 mod) {
+    u32 ret = base;
+
     if (mod != 0) {
         if (mod > 0) {
-            base = (base * (mod + 1524)) / 1524;
+            ret = (base * (mod + 1524)) / 1524;
         } else {
-            base = 1524 * base / (1524 - mod);
+            ret = 1524 * base / (1524 - mod);
         }
     }
 
-    return base;
+    return ret;
 }
 
-// INCLUDE_ASM("asm/nonmatchings/vag", SetVAGVol);
+// Maybe not a real function, but it works and is nicer
+static void CalculateSoundHandlerVolume(struct VagCmd *vag, int *out_left, int *out_right) {
+    struct VolumePair *pan;
+    GSoundHandlerPtr sndhnd;
+    u32 vol;
+
+    sndhnd = vag->sound_handler;
+
+    vol = (vag->volume * MasterVolume[sndhnd->VolGroup]) >> 10;
+    vol = (vol * sndhnd->Current_Vol) >> 10;
+    vol = (vol * 0x3fff) >> 10;
+
+    pan = &gPanTable[(vag->unk0xb0 + 90) % 360u];
+
+    *out_left = (pan->left * vol) >> 10;
+    *out_right = (pan->right * vol) >> 10;
+
+    if (*out_left >= 0x4000) {
+        *out_left = 0x3fff;
+    }
+
+    if (*out_right >= 0x4000) {
+        *out_right = 0x3fff;
+    }
+}
+
 void SetVAGVol(struct VagCmd *vag, int disable_intr) {
     struct VagCmd *sibling;
-    GSoundHandlerPtr sndhnd;
+    struct VolumePair *pan;
     sceSdBatch batch[6];
-    int pitch, batch_count;
+    int batch_count;
     int voll, volr;
     int oldstat;
 
-    if (vag && vag->status[4] && !vag->status[2] && !vag->status[11]) {
+    if (!vag || !vag->status[4] || vag->status[2] || vag->status[11]) {
+        return;
+    }
+
+    sibling = vag->sibling;
+    batch_count = 0;
+
+    if (vag->sound_handler) {
+        CalculateSoundHandlerVolume(vag, &voll, &volr);
+    } else {
         CalculateVAGVolumes(vag, &voll, &volr);
-        sndhnd = vag->sound_handler;
-        sibling = sibling;
-        if (sndhnd) {
-            // TODO
-        }
+    }
 
-        if (sibling) {
-            batch[0].func = 1;
-            batch[0].entry = SD_VP_VOLL | vag->voice;
-            batch[0].value = voll;
+    if (sibling) {
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLL | vag->voice;
+        batch[batch_count].value = voll;
+        batch_count++;
 
-            batch[1].func = 1;
-            batch[1].entry = SD_VP_VOLL | sibling->voice;
-            batch[1].value = 0;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLL | sibling->voice;
+        batch[batch_count].value = 0;
+        batch_count++;
 
-            batch[2].func = 1;
-            batch[2].entry = SD_VP_VOLR | vag->voice;
-            batch[2].value = 0;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLR | vag->voice;
+        batch[batch_count].value = 0;
+        batch_count++;
 
-            batch[3].func = 1;
-            batch[3].entry = SD_VP_VOLR | sibling->voice;
-            batch[3].value = volr;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLR | sibling->voice;
+        batch[batch_count].value = volr;
+        batch_count++;
 
-            pitch = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
-            batch[4].func = 1;
-            batch[4].entry = SD_VP_PITCH | vag->voice;
-            batch[4].value = pitch;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_PITCH | vag->voice;
+        batch[batch_count].value = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
+        batch_count++;
 
-            batch[5].func = 1;
-            batch[5].entry = SD_VP_PITCH | sibling->voice;
-            batch[5].value = pitch;
-            batch_count = 6;
-        } else {
-            batch[0].func = 1;
-            batch[0].entry = SD_VP_VOLL | vag->voice;
-            batch[0].value = voll;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_PITCH | sibling->voice;
+        batch[batch_count].value = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
+        batch_count++;
+    } else {
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLL | vag->voice;
+        batch[batch_count].value = voll;
+        batch_count++;
 
-            batch[1].func = 1;
-            batch[1].entry = SD_VP_VOLR | vag->voice;
-            batch[1].value = volr;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_VOLR | vag->voice;
+        batch[batch_count].value = volr;
+        batch_count++;
 
-            pitch = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
-            batch[3].func = 1;
-            batch[3].entry = SD_VP_PITCH | vag->voice;
-            batch[3].value = pitch;
+        batch[batch_count].func = 1;
+        batch[batch_count].entry = SD_VP_PITCH | vag->voice;
+        batch[batch_count].value = CalculateVAGPitch(vag->base_pitch, vag->new_pitch);
+        batch_count++;
+    }
 
-            batch_count = 3;
-        }
-
-        if (disable_intr == 1) {
-            CpuSuspendIntr(&oldstat);
-            sceSdProcBatch(batch, NULL, batch_count);
-            CpuResumeIntr(oldstat);
-        } else {
-            sceSdProcBatch(batch, NULL, batch_count);
-        }
+    if (disable_intr == 1) {
+        CpuSuspendIntr(&oldstat);
+        sceSdProcBatch(batch, NULL, batch_count);
+        CpuResumeIntr(oldstat);
+    } else {
+        sceSdProcBatch(batch, NULL, batch_count);
     }
 }
 
